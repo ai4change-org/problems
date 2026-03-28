@@ -2,27 +2,33 @@ name: Trending Issues
 
 on:
   schedule:
-    - cron: '0 9 * * 1'
+    - cron: '0 9 * * 1'  # Every Monday at 9 AM UTC
   workflow_dispatch:
 
 permissions:
   issues: write
+  contents: write
 
 jobs:
   trending:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Identify and label trending issues
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require('fs');
             const TRENDING_LABEL = '🔥 trending';
-            const REACTION_THRESHOLD = 5;
+            const TRENDING_THRESHOLD = 5;
             const LOOKBACK_DAYS = 30;
 
             const since = new Date();
             since.setDate(since.getDate() - LOOKBACK_DAYS);
 
+            // Fetch all open issues
             const issues = await github.paginate(github.rest.issues.listForRepo, {
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -36,17 +42,33 @@ jobs:
               i.labels.some(l => l.name === '🌱 submitted')
             );
 
+            const trendingIssues = [];
+
             for (const issue of problemIssues) {
+              // Count reactions (👍, ❤️, 🎉 all count)
               const reactions = await github.rest.reactions.listForIssue({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: issue.number
+                issue_number: issue.number,
+                per_page: 100
               });
 
-              const thumbsUp = reactions.data.filter(r => r.content === '+1').length;
+              const positiveReactions = reactions.data.filter(r =>
+                ['+1', 'heart', 'hooray', 'rocket'].includes(r.content)
+              ).length;
+
+              // Count comments (excluding bot comments)
+              const commentCount = issue.comments || 0;
+
+              // Calculate trending score:
+              // - Each positive reaction = 1 point
+              // - Each comment = 0.5 points (discussion signals interest)
+              const score = positiveReactions + Math.floor(commentCount * 0.5);
+
               const hasTrending = issue.labels.some(l => l.name === TRENDING_LABEL);
 
-              if (thumbsUp >= REACTION_THRESHOLD && !hasTrending) {
+              if (score >= TRENDING_THRESHOLD && !hasTrending) {
+                // Add trending label
                 await github.rest.issues.addLabels({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -58,18 +80,90 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
-                  body: `## 🔥 This problem is trending!\n\nThis issue has received significant community support (${thumbsUp} votes). The AI4Change community is paying attention.\n\n**What happens next:**\n- This problem will be highlighted in our weekly digest\n- Solution proposals are especially welcome — [propose one here](../../issues/new?template=solution-proposal.yml)\n- If you have relevant expertise, consider [volunteering](../../issues/new?template=volunteer.yml)\n\nThank you to everyone who voted and contributed to the discussion! 🌍`
+                  body: [
+                    `## 🔥 This problem is trending!`,
+                    ``,
+                    `This issue has received significant community support (**${positiveReactions}** reactions, **${commentCount}** comments — score: **${score}**).`,
+                    ``,
+                    `**What happens next:**`,
+                    `- This problem will be highlighted in our [trending list](../../blob/main/trending.md)`,
+                    `- Solution proposals are especially welcome — [propose one here](../../issues/new?template=solution-proposal.yml)`,
+                    `- If you have relevant expertise, consider [volunteering](../../issues/new?template=volunteer.yml)`,
+                    ``,
+                    `Thank you to everyone who voted and contributed to the discussion! 🌍`
+                  ].join('\n')
                 });
 
-                console.log(`Marked issue #${issue.number} as trending (${thumbsUp} votes)`);
-              } else if (thumbsUp < REACTION_THRESHOLD && hasTrending) {
+                console.log(`Marked issue #${issue.number} as trending (score: ${score})`);
+              } else if (score < TRENDING_THRESHOLD && hasTrending) {
+                // Remove trending label if activity dropped
                 await github.rest.issues.removeLabel({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
                   name: TRENDING_LABEL
                 }).catch(() => {});
+
+                console.log(`Removed trending from issue #${issue.number} (score dropped to ${score})`);
+              }
+
+              // Collect data for trending.md
+              if (score >= TRENDING_THRESHOLD || hasTrending) {
+                const categoryLabels = issue.labels
+                  .filter(l => !['🌱 submitted', '🔥 trending', '🚨 urgent'].includes(l.name))
+                  .map(l => l.name);
+
+                trendingIssues.push({
+                  number: issue.number,
+                  title: issue.title,
+                  score,
+                  reactions: positiveReactions,
+                  comments: commentCount,
+                  categories: categoryLabels.join(', ') || 'Uncategorized',
+                  url: issue.html_url
+                });
               }
             }
 
-            console.log(`Processed ${problemIssues.length} issues for trending status`);
+            // Sort by score descending
+            trendingIssues.sort((a, b) => b.score - a.score);
+
+            // Generate trending.md
+            const now = new Date().toISOString().split('T')[0];
+            let md = [
+              `# 🔥 Trending Problems`,
+              ``,
+              `> Auto-updated by the [Trending Issues workflow](.github/workflows/trending.yml) — last run: **${now}**`,
+              ``,
+              `These are the problems the AI4Change community cares most about right now, ranked by engagement (reactions + comments).`,
+              ``
+            ];
+
+            if (trendingIssues.length > 0) {
+              md.push(`| # | Problem | Score | 👍 | 💬 | Labels |`);
+              md.push(`|---|---------|-------|----|----|--------|`);
+
+              trendingIssues.forEach((issue, idx) => {
+                md.push(`| ${idx + 1} | [${issue.title}](${issue.url}) | **${issue.score}** | ${issue.reactions} | ${issue.comments} | ${issue.categories} |`);
+              });
+
+              md.push(``);
+              md.push(`---`);
+              md.push(``);
+              md.push(`**Want to help?** Pick a trending problem and [propose a solution](../../issues/new?template=solution-proposal.yml) or [volunteer your skills](../../issues/new?template=volunteer.yml).`);
+            } else {
+              md.push(`*No trending problems yet. [Submit a problem](../../issues/new?template=problem.yml) and rally the community!*`);
+            }
+
+            md.push(``);
+
+            fs.writeFileSync('trending.md', md.join('\n'));
+            console.log(`Generated trending.md with ${trendingIssues.length} issues`);
+
+      - name: Commit trending.md if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add trending.md
+          git diff --cached --quiet || git commit -m "📊 Update trending problems [skip ci]"
+          git push

@@ -1,0 +1,150 @@
+name: AI Triage Bot
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    # Only triage problem submissions (they get the 🌱 submitted label from the template)
+    if: contains(github.event.issue.labels.*.name, '🌱 submitted')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: AI Triage Analysis
+        uses: actions/github-script@v7
+        env:
+          AI_API_KEY: ${{ secrets.OPENAI_API_KEY || secrets.ANTHROPIC_API_KEY }}
+          AI_PROVIDER: ${{ secrets.AI_PROVIDER || 'openai' }}
+        with:
+          script: |
+            const fs = require('fs');
+            const issue = context.payload.issue;
+
+            // Load the triage prompt
+            let systemPrompt;
+            try {
+              systemPrompt = fs.readFileSync('TRIAGE_PROMPT.md', 'utf8');
+            } catch (e) {
+              console.log('TRIAGE_PROMPT.md not found, using default prompt');
+              systemPrompt = 'You are an AI triage assistant for AI4Change, a community that crowdsources real-world problems and builds AI solutions. Analyze the issue and provide a structured triage.';
+            }
+
+            // Fetch existing open issues for duplicate detection
+            const existingIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+
+            const issueList = existingIssues
+              .filter(i => !i.pull_request && i.number !== issue.number)
+              .map(i => `#${i.number}: ${i.title}`)
+              .join('\n');
+
+            const userMessage = [
+              `## New Issue to Triage`,
+              ``,
+              `**Title:** ${issue.title}`,
+              `**Body:**`,
+              issue.body || '(no body)',
+              ``,
+              `## Existing Open Issues`,
+              issueList || '(none)',
+            ].join('\n');
+
+            const apiKey = process.env.AI_API_KEY;
+
+            if (!apiKey) {
+              console.log('No AI API key configured — skipping AI triage');
+              // Post a basic triage comment without AI
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: [
+                  `## 🤖 Triage Report`,
+                  ``,
+                  `*AI triage is not configured yet. Set up \`OPENAI_API_KEY\` or \`ANTHROPIC_API_KEY\` in repository secrets to enable AI-powered analysis.*`,
+                  ``,
+                  `**Manual triage checklist:**`,
+                  `- [ ] Check for duplicate issues`,
+                  `- [ ] Verify problem specificity and actionability`,
+                  `- [ ] Identify required skills/expertise`,
+                  `- [ ] Assess urgency and scope`,
+                  ``,
+                  `---`,
+                  `*🤖 AI4Change Triage Bot*`,
+                ].join('\n')
+              });
+              return;
+            }
+
+            let aiResponse;
+            const provider = process.env.AI_PROVIDER || 'openai';
+
+            try {
+              if (provider === 'anthropic') {
+                const resp = await fetch('https://api.anthropic.com/v1/messages', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': apiKey,
+                    'anthropic-version': '2023-06-01'
+                  },
+                  body: JSON.stringify({
+                    model: 'claude-sonnet-4-20250514',
+                    max_tokens: 1024,
+                    system: systemPrompt,
+                    messages: [{ role: 'user', content: userMessage }]
+                  })
+                });
+                const data = await resp.json();
+                aiResponse = data.content?.[0]?.text || 'AI analysis unavailable';
+              } else {
+                // Default: OpenAI
+                const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                  },
+                  body: JSON.stringify({
+                    model: 'gpt-4o-mini',
+                    max_tokens: 1024,
+                    messages: [
+                      { role: 'system', content: systemPrompt },
+                      { role: 'user', content: userMessage }
+                    ]
+                  })
+                });
+                const data = await resp.json();
+                aiResponse = data.choices?.[0]?.message?.content || 'AI analysis unavailable';
+              }
+            } catch (err) {
+              console.error('AI API call failed:', err.message);
+              aiResponse = `AI analysis failed: ${err.message}`;
+            }
+
+            // Post triage comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: [
+                `## 🤖 AI Triage Report`,
+                ``,
+                aiResponse,
+                ``,
+                `---`,
+                `*🤖 AI4Change Triage Bot — this is an automated analysis to help the community. Human review is always welcome.*`,
+              ].join('\n')
+            });
+
+            console.log(`Posted AI triage for issue #${issue.number}`);

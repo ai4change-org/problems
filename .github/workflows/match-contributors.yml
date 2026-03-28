@@ -1,0 +1,146 @@
+name: Match Contributors
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  issues: write
+
+jobs:
+  match:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == '✅ committed'
+    steps:
+      - name: Find matching volunteers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const text = `${issue.title} ${issue.body}`.toLowerCase();
+
+            // Define skill keywords that map to volunteer capabilities
+            const skillSignals = {
+              'Machine Learning / AI': [
+                'ml', 'machine learning', 'ai', 'model', 'prediction',
+                'classification', 'detection', 'neural', 'training data',
+                'computer vision', 'nlp', 'natural language'
+              ],
+              'Data Science & Analytics': [
+                'data', 'analytics', 'dataset', 'statistics', 'visualization',
+                'dashboard', 'metrics', 'analysis'
+              ],
+              'Backend Development': [
+                'api', 'server', 'database', 'backend', 'infrastructure',
+                'cloud', 'deployment', 'pipeline'
+              ],
+              'Frontend / Mobile Development': [
+                'mobile', 'app', 'android', 'ios', 'ui', 'interface',
+                'web app', 'frontend', 'ussd', 'sms'
+              ],
+              'Translation & Localization': [
+                'language', 'translation', 'localization', 'multilingual',
+                'local language', 'indigenous', 'dialect'
+              ],
+              'Domain Expertise': [
+                'agriculture', 'health', 'medical', 'education', 'water',
+                'energy', 'climate', 'disaster', 'humanitarian'
+              ],
+              'Community Organizing & Outreach': [
+                'community', 'outreach', 'field testing', 'local partner',
+                'ngo', 'grassroots', 'awareness'
+              ],
+              'DevOps / Cloud Infrastructure': [
+                'offline', 'edge', 'iot', 'sensor', 'low-bandwidth',
+                'raspberry pi', 'embedded', 'deployment'
+              ]
+            };
+
+            // Detect which skills this problem needs
+            const neededSkills = [];
+            for (const [skill, keywords] of Object.entries(skillSignals)) {
+              if (keywords.some(kw => text.includes(kw))) {
+                neededSkills.push(skill);
+              }
+            }
+
+            if (neededSkills.length === 0) {
+              neededSkills.push('General Contributors');
+            }
+
+            // Find volunteer issues
+            const allIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: '🙋 volunteer',
+              per_page: 100
+            });
+
+            const volunteers = allIssues.filter(i => !i.pull_request);
+
+            // Match volunteers by keyword overlap
+            const matches = [];
+            for (const vol of volunteers) {
+              const volText = `${vol.title} ${vol.body}`.toLowerCase();
+              const matchedSkills = [];
+
+              for (const [skill, keywords] of Object.entries(skillSignals)) {
+                if (neededSkills.includes(skill) && keywords.some(kw => volText.includes(kw))) {
+                  matchedSkills.push(skill);
+                }
+              }
+
+              if (matchedSkills.length > 0) {
+                matches.push({
+                  number: vol.number,
+                  title: vol.title,
+                  user: vol.user.login,
+                  skills: matchedSkills
+                });
+              }
+            }
+
+            // Sort by number of matching skills
+            matches.sort((a, b) => b.skills.length - a.skills.length);
+            const topMatches = matches.slice(0, 5);
+
+            // Build the comment
+            const lines = [
+              `## 🤝 Potential Contributor Matches`,
+              ``,
+              `This problem has been **committed** — time to build! Based on the skills needed, here are potential contributors from our volunteer pool.`,
+              ``,
+              `### Skills Needed`,
+              neededSkills.map(s => `- ${s}`).join('\n'),
+              ``
+            ];
+
+            if (topMatches.length > 0) {
+              lines.push(`### Suggested Matches`);
+              lines.push(``);
+              for (const match of topMatches) {
+                lines.push(`- **@${match.user}** ([volunteer profile](#${match.number})) — ${match.skills.join(', ')}`);
+              }
+              lines.push(``);
+              lines.push(`> These matches are based on keyword overlap between this problem and volunteer profiles. Reach out to see if they're available!`);
+            } else {
+              lines.push(`### No Matches Yet`);
+              lines.push(``);
+              lines.push(`No volunteers currently match the skills needed for this problem.`);
+              lines.push(``);
+              lines.push(`**Know someone who could help?** Share this issue or [volunteer your skills](../../issues/new?template=volunteer.yml)!`);
+            }
+
+            lines.push(``);
+            lines.push(`---`);
+            lines.push(`*🤝 AI4Change Matching Bot — connecting problems with people who can solve them.*`);
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: lines.join('\n')
+            });
+
+            console.log(`Posted match suggestions for issue #${issue.number}: ${topMatches.length} matches found`);

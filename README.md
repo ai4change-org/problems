@@ -75,6 +75,39 @@ New here? Start by reading and voting on these initial problems:
 - **Include context** — who's affected, where, what's been tried
 - **Be respectful** — these are real people with real challenges
 
+## Automation & Bots
+
+This repo uses GitHub Actions to keep the community running smoothly:
+
+| Workflow | Trigger | What it does |
+|----------|---------|-------------|
+| [Auto-Label](/.github/workflows/auto-label.yml) | Issue opened/edited | Detects **categories** (agriculture, health, education, etc.), **regions** (africa, asia, latin-america, etc.), and **urgency** from issue content and applies labels automatically |
+| [Trending Issues](/.github/workflows/trending.yml) | Weekly (Monday 9am UTC) + manual | Scores issues by reactions + comments. Adds 🔥 trending label above threshold, removes it if activity drops. Updates [trending.md](trending.md) |
+| [AI Triage Bot](/.github/workflows/ai-triage.yml) | New issue (🌱 submitted) | Calls an AI model to summarize the problem, detect duplicates, identify needed skills, and assess actionability. Posts a triage comment |
+| [Match Contributors](/.github/workflows/match-contributors.yml) | Issue labeled ✅ committed | Scans volunteer profiles and suggests contributor matches based on skill/keyword overlap with the problem |
+| [Welcome](/.github/workflows/welcome.yml) | Issue opened | Welcomes first-time contributors with context-specific guidance |
+| [Stale](/.github/workflows/stale.yml) | Weekly (Monday 6am UTC) | Marks inactive issues as stale after 90 days, closes after 30 more. Trending/committed/building issues are exempt |
+
+### Setup Scripts
+
+```bash
+# Create all required labels with correct colors
+./scripts/setup-labels.sh ai4change-org/problems
+
+# Create the 5 seed issues from seeds/ directory
+./scripts/seed-issues.sh ai4change-org/problems
+```
+
+### Required Secrets (for AI Triage Bot)
+
+| Secret | Description |
+|--------|-------------|
+| `OPENAI_API_KEY` | OpenAI API key (default provider) |
+| `ANTHROPIC_API_KEY` | Anthropic API key (alternative provider) |
+| `AI_PROVIDER` | Set to `anthropic` to use Claude instead of GPT (optional, defaults to `openai`) |
+
+Configure these in **Settings > Secrets and variables > Actions** in the repository.
+
 ## Get Involved
 
 - 📖 [Contributing Guide](CONTRIBUTING.md) — everything you need to know

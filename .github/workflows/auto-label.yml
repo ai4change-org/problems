@@ -19,47 +19,68 @@ jobs:
             const text = `${issue.title} ${issue.body}`.toLowerCase();
             const labels = [];
 
+            // --- Category detection ---
             const categories = {
               '🌾 agriculture': [
                 'agriculture', 'farming', 'crop', 'livestock', 'irrigation',
                 'harvest', 'soil', 'fertilizer', 'pest', 'food security',
-                'smallholder', 'agronomist', 'seed', 'drought'
+                'smallholder', 'agronomist', 'seed', 'drought', 'cattle',
+                'fishery', 'aquaculture', 'poultry', 'grain', 'plantation'
               ],
               '🎓 education': [
                 'education', 'school', 'student', 'teacher', 'literacy',
                 'learning', 'curriculum', 'classroom', 'university', 'training',
-                'textbook', 'tutor', 'mentor'
+                'textbook', 'tutor', 'mentor', 'enrollment', 'dropout',
+                'scholarship', 'vocational', 'e-learning'
               ],
               '🏥 health': [
                 'health', 'medical', 'hospital', 'clinic', 'disease',
                 'diagnosis', 'patient', 'medicine', 'vaccine', 'maternal',
                 'malaria', 'hiv', 'tuberculosis', 'mental health', 'pharmacy',
-                'supply chain'
+                'supply chain', 'epidemic', 'pandemic', 'cholera', 'dengue',
+                'nutrition', 'mortality', 'ambulance', 'telemedicine'
               ],
               '🏗️ infrastructure': [
                 'infrastructure', 'road', 'bridge', 'housing', 'transport',
                 'building', 'construction', 'urban', 'rural development',
-                'connectivity', 'internet access'
+                'connectivity', 'internet access', 'broadband', 'telecom',
+                'railway', 'airport', 'port'
               ],
               '🌍 environment': [
                 'environment', 'climate', 'pollution', 'deforestation',
                 'biodiversity', 'conservation', 'carbon', 'emissions',
-                'renewable', 'waste', 'recycling', 'ecosystem'
+                'renewable', 'waste', 'recycling', 'ecosystem', 'wildfire',
+                'desertification', 'coral reef', 'ocean', 'air quality'
+              ],
+              '💻 technology': [
+                'technology', 'digital inclusion', 'internet', 'mobile',
+                'smartphone', 'connectivity', 'digital divide', 'tech access',
+                'software', 'open source', 'ai', 'machine learning',
+                'data', 'digital literacy', 'cyber'
+              ],
+              '💰 economy': [
+                'economy', 'economic', 'poverty', 'income', 'livelihood',
+                'employment', 'unemployment', 'microfinance', 'trade',
+                'market access', 'financial inclusion', 'banking',
+                'entrepreneurship', 'wages', 'gdp'
               ],
               '💧 water': [
                 'water', 'sanitation', 'clean water', 'well', 'groundwater',
                 'waterborne', 'drinking water', 'water quality', 'purification',
-                'water access', 'hygiene'
+                'water access', 'hygiene', 'arsenic', 'desalination',
+                'rainwater', 'sewage', 'latrine', 'wash'
               ],
               '⚡ energy': [
                 'energy', 'electricity', 'solar', 'power grid', 'microgrid',
                 'off-grid', 'battery', 'electrification', 'blackout',
-                'energy access'
+                'energy access', 'wind power', 'hydropower', 'biogas',
+                'kerosene', 'diesel generator', 'power outage'
               ],
               '🚨 disaster-response': [
                 'disaster', 'earthquake', 'flood', 'hurricane', 'tsunami',
                 'emergency', 'relief', 'evacuation', 'rescue', 'humanitarian',
-                'crisis', 'conflict', 'refugee'
+                'crisis', 'conflict', 'refugee', 'cyclone', 'landslide',
+                'famine', 'displacement', 'shelter'
               ]
             };
 
@@ -69,12 +90,43 @@ jobs:
               }
             }
 
+            // --- Geographic region detection ---
             const regions = {
-              '🌍 africa': ['africa', 'kenya', 'nigeria', 'ethiopia', 'tanzania', 'uganda', 'ghana', 'south africa', 'mozambique', 'senegal', 'mali', 'niger', 'congo', 'rwanda', 'malawi'],
-              '🌏 asia': ['asia', 'india', 'bangladesh', 'nepal', 'indonesia', 'philippines', 'vietnam', 'cambodia', 'myanmar', 'pakistan', 'sri lanka', 'thailand'],
-              '🌎 americas': ['brazil', 'mexico', 'colombia', 'peru', 'haiti', 'guatemala', 'honduras', 'bolivia', 'caribbean'],
-              '🌍 europe': ['europe', 'ukraine', 'romania', 'turkey'],
-              '🌏 oceania': ['oceania', 'pacific islands', 'fiji', 'papua new guinea', 'tonga', 'samoa']
+              '🌍 africa': [
+                'africa', 'kenya', 'nigeria', 'ethiopia', 'tanzania', 'uganda',
+                'ghana', 'south africa', 'mozambique', 'senegal', 'mali', 'niger',
+                'congo', 'rwanda', 'malawi', 'zambia', 'zimbabwe', 'cameroon',
+                'ivory coast', 'sudan', 'somalia', 'madagascar', 'angola',
+                'sierra leone', 'burkina faso', 'chad', 'burundi', 'benin', 'togo'
+              ],
+              '🌏 asia': [
+                'asia', 'india', 'bangladesh', 'nepal', 'indonesia', 'philippines',
+                'vietnam', 'cambodia', 'myanmar', 'pakistan', 'sri lanka',
+                'thailand', 'china', 'afghanistan', 'laos', 'mongolia',
+                'tajikistan', 'uzbekistan', 'kyrgyzstan'
+              ],
+              '🌎 latin-america': [
+                'latin america', 'south america', 'central america', 'brazil',
+                'mexico', 'colombia', 'peru', 'haiti', 'guatemala', 'honduras',
+                'bolivia', 'caribbean', 'ecuador', 'venezuela', 'nicaragua',
+                'el salvador', 'costa rica', 'panama', 'dominican republic',
+                'cuba', 'jamaica', 'argentina', 'chile', 'paraguay', 'uruguay'
+              ],
+              '🌎 north-america': [
+                'united states', 'canada', 'indigenous communities north america',
+                'appalachia', 'first nations', 'native american', 'navajo',
+                'tribal lands', 'reservation'
+              ],
+              '🌍 europe': [
+                'europe', 'ukraine', 'romania', 'turkey', 'moldova', 'albania',
+                'kosovo', 'bosnia', 'serbia', 'north macedonia', 'georgia',
+                'armenia', 'roma communities'
+              ],
+              '🌏 oceania': [
+                'oceania', 'pacific islands', 'fiji', 'papua new guinea', 'tonga',
+                'samoa', 'vanuatu', 'solomon islands', 'kiribati', 'marshall islands',
+                'micronesia', 'tuvalu', 'nauru', 'palau'
+              ]
             };
 
             for (const [label, keywords] of Object.entries(regions)) {
@@ -83,6 +135,18 @@ jobs:
               }
             }
 
+            // --- Urgency detection ---
+            const urgencyKeywords = [
+              'urgent', 'emergency', 'crisis', 'critical', 'immediate danger',
+              'life-threatening', 'catastrophe', 'famine', 'outbreak',
+              'people dying', 'death toll', 'starvation', 'imminent'
+            ];
+
+            if (urgencyKeywords.some(kw => text.includes(kw))) {
+              labels.push('🚨 urgent');
+            }
+
+            // --- Apply labels ---
             if (labels.length > 0) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
@@ -91,4 +155,6 @@ jobs:
                 labels: labels
               });
               console.log(`Added labels: ${labels.join(', ')}`);
+            } else {
+              console.log('No matching labels found for this issue');
             }
