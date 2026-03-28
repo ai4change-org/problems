@@ -8,14 +8,16 @@ Submit a problem your community faces. The community votes, discusses, and when 
 
 *Like Playing for Change, but for tech solutions.*
 
-![Problems](https://img.shields.io/badge/seed_problems-15-blue?style=flat-square)
-![Active Projects](https://img.shields.io/badge/active_projects-0-orange?style=flat-square)
+![Open Issues](https://img.shields.io/github/issues/ai4change-org/problems?style=flat-square&label=open%20problems&color=blue)
+![Seed Problems](https://img.shields.io/github/issues/ai4change-org/problems/seed-problem?style=flat-square&label=seed%20problems&color=8B5CF6)
+![Critical](https://img.shields.io/github/issues/ai4change-org/problems/%F0%9F%94%B4%20critical?style=flat-square&label=critical&color=B60205)
 ![Contributors Welcome](https://img.shields.io/badge/contributors-welcome-brightgreen?style=flat-square)
+![Discussions](https://img.shields.io/github/discussions/ai4change-org/problems?style=flat-square&label=discussions&color=purple)
 ![License](https://img.shields.io/badge/license-open_source-purple?style=flat-square)
 
 ---
 
-### 🗣️ [Submit a Problem →](../../issues/new?template=problem.yml)
+### 🗣️ [Submit a Problem →](../../issues/new?template=problem.yml) · 📖 [How to Submit →](docs/HOW-TO-SUBMIT.md)
 
 ### 💡 [Propose a Solution →](../../issues/new?template=solution-proposal.yml)
 
@@ -28,6 +30,40 @@ Submit a problem your community faces. The community votes, discusses, and when 
 ---
 
 </div>
+
+## Quick Stats
+
+| Metric | Count |
+|--------|-------|
+| Open Problems | [View all →](https://github.com/ai4change-org/problems/issues) |
+| Seed Problems | [View seeds →](https://github.com/ai4change-org/problems/issues?q=is%3Aissue+is%3Aopen+label%3Aseed-problem) |
+| Critical Priority | [View critical →](https://github.com/ai4change-org/problems/issues?q=is%3Aissue+is%3Aopen+label%3A%22%F0%9F%94%B4+critical%22) |
+| Categories | Agriculture, Education, Health, Environment, Water, Energy, Disaster Response, Digital Inclusion |
+| Regions | Africa, Asia, Americas, Europe, Oceania, Global |
+
+## Live Problems
+
+Browse real problems submitted by the community:
+
+| # | Problem | Priority | Labels |
+|---|---------|----------|--------|
+| [#11](https://github.com/ai4change-org/problems/issues/11) | Clean water monitoring for rural communities in Bangladesh | High | 💧 Water, 🌏 Asia |
+| [#12](https://github.com/ai4change-org/problems/issues/12) | Crop disease detection for smallholder farmers in East Africa | High | 🌾 Agriculture, 🌍 Africa |
+| [#13](https://github.com/ai4change-org/problems/issues/13) | Medical supply chain tracking in disaster zones | Critical | 🚨 Disaster Response, 🏥 Health |
+| [#14](https://github.com/ai4change-org/problems/issues/14) | Education content generation in local and indigenous languages | High | 🎓 Education, 🌐 Global |
+| [#15](https://github.com/ai4change-org/problems/issues/15) | Community energy grid optimization for off-grid villages in India | Medium | ⚡ Energy, 🌏 Asia |
+| [#16](https://github.com/ai4change-org/problems/issues/16) | Disaster early warning system for rural communities | Critical | 🚨 Disaster Response, 🌐 Global |
+| [#17](https://github.com/ai4change-org/problems/issues/17) | AI-powered accessibility tools for visually impaired users | High | 📱 Digital Inclusion, 🌐 Global |
+| [#18](https://github.com/ai4change-org/problems/issues/18) | Deforestation monitoring and alerting via satellite imagery | Critical | 🌍 Environment, 🌐 Global |
+| [#19](https://github.com/ai4change-org/problems/issues/19) | Mental health support chatbot for underserved communities | High | 🏥 Health, 🌐 Global |
+| [#20](https://github.com/ai4change-org/problems/issues/20) | Food waste reduction in supply chains using AI | High | 🌾 Agriculture, 🌐 Global |
+| [#21](https://github.com/ai4change-org/problems/issues/21) | Air quality monitoring and health alerts for urban communities | High | 🏥 Health, 🌍 Environment |
+| [#22](https://github.com/ai4change-org/problems/issues/22) | Illegal fishing detection via vessel tracking and satellite imagery | High | 🌍 Environment, Wildlife |
+| [#23](https://github.com/ai4change-org/problems/issues/23) | Refugee camp resource allocation optimizer | Critical | 🚨 Disaster Response, 🌐 Global |
+| [#24](https://github.com/ai4change-org/problems/issues/24) | Endangered species identification from camera trap imagery | High | 🌍 Environment, Wildlife |
+| [#25](https://github.com/ai4change-org/problems/issues/25) | Misinformation and fake news detection for local news ecosystems | High | 📱 Digital Inclusion, 🌐 Global |
+
+**[View all open problems →](https://github.com/ai4change-org/problems/issues?q=is%3Aissue+is%3Aopen)**
 
 ## How It Works
 
@@ -143,9 +179,26 @@ This repo uses GitHub Actions to keep the community running smoothly:
 
 Configure these in **Settings > Secrets and variables > Actions** in the repository.
 
+## Project Board
+
+To set up the AI4Change Problem Tracker project board:
+
+1. Go to the [AI4Change org projects page](https://github.com/orgs/ai4change-org/projects)
+2. Click **New project** → choose **Board** view
+3. Name it **AI4Change Problem Tracker**
+4. Add columns: `Submitted`, `Trending`, `Committed`, `Building`, `Shipped`
+5. Link the `problems` repo and add existing issues
+
+> **Note**: The project board requires `project` scope on your GitHub token. To create it via CLI:
+> ```bash
+> gh auth refresh -s project,read:project
+> gh project create --title 'AI4Change Problem Tracker' --owner ai4change-org
+> ```
+
 ## Get Involved
 
 - 📖 [Contributing Guide](CONTRIBUTING.md) — everything you need to know
+- 📖 [How to Submit a Problem](docs/HOW-TO-SUBMIT.md) — step-by-step submission guide
 - 📊 [Problem Rating System](docs/RATING.md) — how problems get prioritized
 - 💡 [Solutions Guide](docs/SOLUTIONS.md) — how to propose and build a solution
 - 📜 [Code of Conduct](CODE_OF_CONDUCT.md) — how we treat each other
