@@ -1,29 +1,43 @@
-name: 🌍 Submit a Problem
-description: Describe a real-world problem your community faces
+name: "\U0001F30D Submit a Problem"
+description: Describe a real-world problem your community faces — this is how change begins
 title: "[Problem]: "
-labels: ["🌱 submitted"]
+labels: ["\U0001F331 submitted"]
 body:
   - type: markdown
     attributes:
       value: |
-        ## Thank you for submitting a problem!
-        The more detail you provide, the better the community can understand and help solve it.
+        ## Thank you for raising your voice!
+        Every solution starts with someone brave enough to name the problem. The more detail you provide, the better the community can understand, prioritize, and solve it.
+
+        **Not sure if your problem fits?** If it affects real people and AI could help — it belongs here.
 
   - type: textarea
     id: problem
     attributes:
       label: The Problem
-      description: What's the problem? Who does it affect? Where?
-      placeholder: "e.g., Smallholder farmers in East Africa lose 30% of crops to disease because they can't afford agricultural consultants..."
+      description: What's happening? Be specific about the situation on the ground.
+      placeholder: "e.g., Smallholder farmers in East Africa lose 30% of crops to disease because they can't identify infections early and can't afford agricultural consultants..."
     validations:
       required: true
 
   - type: textarea
     id: impact
     attributes:
-      label: Who's Affected
-      description: How many people? Which communities? What's the human impact?
-      placeholder: "e.g., ~2 million smallholder farmers across Kenya, Tanzania, and Uganda..."
+      label: Who's Affected & Scale of Impact
+      description: How many people are affected? Which communities? What happens if nothing changes?
+      placeholder: |
+        e.g., ~2 million smallholder farmers across Kenya, Tanzania, and Uganda.
+        Average farm income is $400/year — losing 30% of crops pushes families below subsistence level.
+        Children are pulled from school to help recover losses.
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Location
+      description: Where specifically does this problem occur? City, region, country — as specific as you can be.
+      placeholder: "e.g., Rural districts in Western Kenya (Kakamega, Bungoma, Vihiga counties)"
     validations:
       required: true
 
@@ -31,15 +45,28 @@ body:
     id: current
     attributes:
       label: What's Been Tried
-      description: Are there existing solutions? Why don't they work?
-      placeholder: "e.g., Government extension officers exist but there's 1 per 3,000 farmers..."
+      description: Are there existing solutions or workarounds? Why don't they work well enough?
+      placeholder: |
+        e.g., Government extension officers exist but there's only 1 per 3,000 farmers.
+        NGO programs have helped but don't scale beyond pilot regions.
+        Farmers rely on word-of-mouth which often leads to misdiagnosis.
 
   - type: textarea
     id: ai-angle
     attributes:
       label: How Could AI Help?
-      description: Do you have ideas about how AI could address this? (Optional — the community will brainstorm too)
-      placeholder: "e.g., A mobile app that identifies crop diseases from photos..."
+      description: Do you have ideas about how AI or technology could address this? (Optional — the community will brainstorm too!)
+      placeholder: "e.g., A mobile app that identifies crop diseases from phone camera photos, works offline, and gives treatment advice in local languages..."
+
+  - type: textarea
+    id: data-sources
+    attributes:
+      label: Available Data & Resources
+      description: Are there existing datasets, research papers, local organizations, or infrastructure that could support a solution?
+      placeholder: |
+        e.g., PlantVillage dataset has 50k+ labeled crop disease images.
+        Local agricultural university has partnerships.
+        Most farmers have basic smartphones with intermittent connectivity.
 
   - type: dropdown
     id: region
@@ -50,21 +77,53 @@ body:
         - Asia
         - Europe
         - North America
+        - Central America & Caribbean
         - South America
         - Oceania
+        - Middle East
         - Global / Multiple regions
+    validations:
+      required: true
 
   - type: dropdown
     id: category
     attributes:
       label: Category
       options:
-        - Agriculture & Food
-        - Education
-        - Health & Medicine
-        - Environment & Climate
-        - Infrastructure
-        - Economic Development
-        - Governance & Policy
-        - Disaster Response
+        - "\U0001F33E Agriculture & Food Security"
+        - "\U0001F393 Education & Literacy"
+        - "\U0001F3E5 Health & Medicine"
+        - "\U0001F30D Environment & Climate"
+        - "\U0001F3D7\uFE0F Infrastructure & Housing"
+        - "\U0001F4B0 Economic Development"
+        - "\U0001F3DB\uFE0F Governance & Civic Tech"
+        - "\U0001F6A8 Disaster Response & Resilience"
+        - "\U0001F4A7 Water & Sanitation"
+        - "\U000026A1 Energy Access"
+        - "\U0001F4F1 Digital Inclusion"
         - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency
+      description: How time-sensitive is this problem?
+      options:
+        - "Critical — people are in immediate danger"
+        - "High — significant ongoing harm"
+        - "Medium — persistent problem affecting quality of life"
+        - "Low — important but not time-sensitive"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Community Guidelines
+      options:
+        - label: I confirm this describes a real problem affecting real people
+          required: true
+        - label: I've searched existing issues to avoid duplicates
+          required: true

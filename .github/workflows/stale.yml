@@ -1,0 +1,40 @@
+name: Manage Stale Issues
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6am UTC
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-message: |
+            This problem hasn't had any activity in 90 days. We're marking it as stale — but that doesn't mean it's not important.
+
+            **To keep this open:**
+            - Add a comment with new context or updates
+            - React with 👍 to show continued community interest
+            - Propose a solution if you have ideas
+
+            If no activity occurs in the next 30 days, this issue will be automatically closed. It can always be reopened.
+
+            *Every problem matters. If this is still relevant, let us know!*
+          close-issue-message: |
+            This issue has been automatically closed after 120 days of inactivity.
+
+            **This doesn't mean the problem is solved.** If this is still relevant:
+            - Reopen this issue with updated context
+            - Submit a new problem issue with fresh information
+
+            Thank you for raising this. The community is stronger because of contributors like you. 🌍
+          stale-issue-label: '⏳ stale'
+          days-before-stale: 90
+          days-before-close: 30
+          exempt-issue-labels: '🔥 trending,✅ committed,🔨 building,📦 shipped'
+          operations-per-run: 50

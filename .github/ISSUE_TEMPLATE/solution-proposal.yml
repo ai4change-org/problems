@@ -1,0 +1,125 @@
+name: "\U0001F4A1 Propose a Solution"
+description: Have an idea for solving an existing problem? Share your approach!
+title: "[Solution]: "
+labels: ["\U0001F4A1 solution-proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Propose a Solution
+        Great ideas come from everywhere. You don't need to be an AI expert — domain knowledge, local context, and creative thinking are just as valuable.
+
+        **Before submitting:** Make sure you've read the problem issue you're proposing to solve.
+
+  - type: input
+    id: problem-link
+    attributes:
+      label: Related Problem
+      description: Link to the problem issue this solution addresses
+      placeholder: "e.g., #12 or https://github.com/ai4change-org/problems/issues/12"
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution-summary
+    attributes:
+      label: Solution Overview
+      description: Describe your proposed solution in 2-3 sentences. What would it do and how?
+      placeholder: "e.g., A lightweight mobile app using on-device ML to identify crop diseases from photos. Works offline, provides treatment recommendations in 5 local languages, and escalates uncertain cases to remote agronomists."
+    validations:
+      required: true
+
+  - type: textarea
+    id: approach
+    attributes:
+      label: Technical Approach
+      description: How would this work technically? What AI/ML techniques, data sources, or platforms would you use?
+      placeholder: |
+        e.g.,
+        - Fine-tune MobileNet on PlantVillage dataset for disease classification
+        - Use TensorFlow Lite for on-device inference (no internet required)
+        - Build with React Native for cross-platform mobile support
+        - Integrate with USSD for feature phone fallback
+    validations:
+      required: true
+
+  - type: textarea
+    id: feasibility
+    attributes:
+      label: Feasibility & Constraints
+      description: What's needed to build this? What are the biggest challenges?
+      placeholder: |
+        e.g.,
+        - Need labeled data for local crop varieties (PlantVillage covers ~80%)
+        - Smartphones with cameras are available to ~60% of target farmers
+        - App size must be <20MB for low-storage devices
+        - Needs field testing with real farmers before launch
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected Impact
+      description: How would this solution change things? Be specific about who benefits and how.
+      placeholder: "e.g., Could reduce crop loss from 30% to under 10%, potentially increasing annual income by $120 per farmer for ~500k reachable farmers in the first year."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Estimated Complexity
+      description: How complex is this to build?
+      options:
+        - "\U0001F7E2 Low — weekend hackathon project"
+        - "\U0001F7E1 Medium — few weeks with a small team"
+        - "\U0001F7E0 High — multi-month project, needs coordination"
+        - "\U0001F534 Very High — requires significant infrastructure/partnerships"
+    validations:
+      required: true
+
+  - type: textarea
+    id: skills-needed
+    attributes:
+      label: Skills & Resources Needed
+      description: What expertise and resources would it take to build this?
+      placeholder: |
+        e.g.,
+        - ML engineer with computer vision experience
+        - Mobile developer (React Native / Flutter)
+        - Swahili/Luganda translator for localization
+        - Access to local farming cooperatives for testing
+        - Cloud credits for model training (~$200)
+
+  - type: textarea
+    id: prior-art
+    attributes:
+      label: Prior Art & References
+      description: Are there similar solutions, research papers, or open-source projects to build on?
+      placeholder: |
+        e.g.,
+        - PlantVillage Nuru app (similar concept, different region)
+        - Paper: "Deep Learning for Crop Disease Detection" (2023)
+        - TensorFlow Lite examples for on-device classification
+
+  - type: dropdown
+    id: involvement
+    attributes:
+      label: Your Involvement
+      description: Are you able to help build this?
+      options:
+        - "\U0001F3D7\uFE0F I want to lead this project"
+        - "\U0001F91D I can contribute part-time"
+        - "\U0001F4DD Just sharing the idea — hoping others pick it up"
+        - "\U0001F9ED I can advise/mentor but not code"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Guidelines
+      options:
+        - label: I'm willing to build this as open source (MIT/Apache 2.0)
+          required: true
+        - label: I've read the related problem issue
+          required: true

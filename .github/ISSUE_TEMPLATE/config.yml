@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 💬 General Discussion
+  - name: "\U0001F4AC Join the Discussion"
     url: https://github.com/ai4change-org/problems/discussions
-    about: Chat about AI4Change, suggest ideas, or connect with the community
-  - name: 🌐 Website
+    about: Chat about AI4Change, suggest ideas, find collaborators, or connect with the community
+  - name: "\U0001F30D Visit AI4Change"
     url: https://ai4change-org.github.io
     about: Learn more about the AI4Change movement
+  - name: "\U0001F4D6 Read the Contributing Guide"
+    url: https://github.com/ai4change-org/problems/blob/main/CONTRIBUTING.md
+    about: Learn how to get involved and make your first contribution

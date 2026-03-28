@@ -1,0 +1,117 @@
+name: "\U0001F64B Volunteer Your Skills"
+description: Want to help solve problems? Tell us what you can contribute!
+title: "[Volunteer]: "
+labels: ["\U0001F64B volunteer"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Welcome to AI4Change!
+        Whether you're a seasoned ML engineer, a student learning to code, a teacher, a farmer, a designer, or a community organizer — there's a place for you here. **You don't need to be an AI expert to make a difference.**
+
+  - type: input
+    id: name
+    attributes:
+      label: What should we call you?
+      description: Name, handle, or nickname — whatever you're comfortable with
+      placeholder: "e.g., Maria, @techforchange, Dr. Okafor"
+    validations:
+      required: true
+
+  - type: textarea
+    id: background
+    attributes:
+      label: About You
+      description: Tell us a bit about yourself. What's your background? What motivates you to help?
+      placeholder: "e.g., I'm a data scientist based in Nairobi. I grew up in a farming community and want to use my skills to help farmers like my parents."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: skills
+    attributes:
+      label: Skills You Can Contribute
+      description: Check all that apply — every skill matters!
+      options:
+        - label: "Machine Learning / AI"
+        - label: "Data Science & Analytics"
+        - label: "Backend Development"
+        - label: "Frontend / Mobile Development"
+        - label: "DevOps / Cloud Infrastructure"
+        - label: "UI/UX Design"
+        - label: "Data Collection & Labeling"
+        - label: "Translation & Localization"
+        - label: "Domain Expertise (agriculture, health, education, etc.)"
+        - label: "Community Organizing & Outreach"
+        - label: "Project Management"
+        - label: "Technical Writing & Documentation"
+        - label: "Research & Analysis"
+        - label: "Testing & QA"
+        - label: "Mentoring & Teaching"
+        - label: "Other (describe below)"
+
+  - type: textarea
+    id: skills-detail
+    attributes:
+      label: Skills Details
+      description: Tell us more about your expertise, tools you know, languages you speak, etc.
+      placeholder: |
+        e.g.,
+        - Python, TensorFlow, PyTorch — 3 years experience
+        - Speak English, Swahili, and Kikuyu fluently
+        - Familiar with agricultural practices in East Africa
+        - Experience deploying ML models to mobile devices
+
+  - type: dropdown
+    id: availability
+    attributes:
+      label: Availability
+      description: How much time can you contribute?
+      options:
+        - "A few hours per month"
+        - "A few hours per week"
+        - "Part-time (~10-20 hrs/week)"
+        - "Full-time for a specific project"
+        - "Flexible — depends on the project"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: timezone
+    attributes:
+      label: Timezone Region
+      description: Helps us connect you with people in compatible timezones
+      options:
+        - "Americas (UTC-10 to UTC-3)"
+        - "Europe & Africa (UTC-1 to UTC+3)"
+        - "Middle East & South Asia (UTC+3 to UTC+5:30)"
+        - "East Asia & Oceania (UTC+6 to UTC+12)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: interests
+    attributes:
+      label: Problems You're Interested In
+      description: Are there specific problems or categories you'd like to work on? Link to specific issues if you've seen ones you like.
+      placeholder: |
+        e.g., I'm most interested in agricultural technology and education problems.
+        Issue #3 (crop disease detection) is right in my wheelhouse.
+        I'd also love to help with anything needing Swahili translation.
+
+  - type: textarea
+    id: ideas
+    attributes:
+      label: Anything Else?
+      description: Ideas, questions, or anything you want the community to know
+      placeholder: "e.g., I run a local tech meetup in Lagos and could help recruit more volunteers from West Africa!"
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Community Guidelines
+      options:
+        - label: I've read and agree to the [Code of Conduct](../../blob/main/CODE_OF_CONDUCT.md)
+          required: true
+        - label: I understand contributions will be open source
+          required: true
