@@ -1,0 +1,70 @@
+name: 🌍 Submit a Problem
+description: Describe a real-world problem your community faces
+title: "[Problem]: "
+labels: ["🌱 submitted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thank you for submitting a problem!
+        The more detail you provide, the better the community can understand and help solve it.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: The Problem
+      description: What's the problem? Who does it affect? Where?
+      placeholder: "e.g., Smallholder farmers in East Africa lose 30% of crops to disease because they can't afford agricultural consultants..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Who's Affected
+      description: How many people? Which communities? What's the human impact?
+      placeholder: "e.g., ~2 million smallholder farmers across Kenya, Tanzania, and Uganda..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: What's Been Tried
+      description: Are there existing solutions? Why don't they work?
+      placeholder: "e.g., Government extension officers exist but there's 1 per 3,000 farmers..."
+
+  - type: textarea
+    id: ai-angle
+    attributes:
+      label: How Could AI Help?
+      description: Do you have ideas about how AI could address this? (Optional — the community will brainstorm too)
+      placeholder: "e.g., A mobile app that identifies crop diseases from photos..."
+
+  - type: dropdown
+    id: region
+    attributes:
+      label: Region
+      options:
+        - Africa
+        - Asia
+        - Europe
+        - North America
+        - South America
+        - Oceania
+        - Global / Multiple regions
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Agriculture & Food
+        - Education
+        - Health & Medicine
+        - Environment & Climate
+        - Infrastructure
+        - Economic Development
+        - Governance & Policy
+        - Disaster Response
+        - Other

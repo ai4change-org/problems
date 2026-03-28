@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 General Discussion
+    url: https://github.com/ai4change-org/problems/discussions
+    about: Chat about AI4Change, suggest ideas, or connect with the community
+  - name: 🌐 Website
+    url: https://ai4change-org.github.io
+    about: Learn more about the AI4Change movement
