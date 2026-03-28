@@ -1,127 +1,127 @@
 # Contributing to AI4Change
 
-Welcome! AI4Change is for everyone — developers, designers, teachers, farmers, doctors, translators, community organizers, and anyone who believes AI should work for all of humanity.
+First off — **thank you**. Whether you're submitting a problem you've witnessed, proposing a solution, writing code, translating content, or just voting on issues — you're part of something meaningful.
 
-You don't need to be an AI expert. You need to care.
-
----
+AI4Change is a community where people worldwide use AI as their instrument to solve real problems. Like Playing for Change, but for tech solutions. Everyone is welcome.
 
 ## Ways to Contribute
 
 ### 1. Submit a Problem
 
-The most important contribution is naming a real problem.
+The most important contribution is naming a problem that needs solving. You don't need to be technical.
 
-**[Submit a Problem →](../../issues/new?template=problem.yml)**
+- Use the [problem template](../../issues/new?template=problem.yml)
+- Be specific: "rural schools in Malawi can't access science content in Chichewa" is better than "education is broken"
+- Include context: who's affected, where, what's been tried
+- One problem per issue
 
-Tips for a great problem submission:
-- **Be specific** — "Rural schools in Kakamega County can't access tutoring" beats "education is broken"
-- **Include context** — Who's affected? How many people? What's been tried?
-- **Share what you know** — Local knowledge is invaluable. Data sources, existing organizations, cultural context
-- **One problem per issue** — Keep it focused so the community can discuss and act
+### 2. Vote on Problems
 
-### 2. Vote and Discuss
-
-Community input drives what gets built. Your voice matters.
-
-- **Upvote** problems you want solved — use the 👍 reaction on the issue
-- **Add context** — Share local knowledge, data, or perspectives in the comments
-- **Ask questions** — Help refine vague problems into actionable ones
-- **Connect dots** — See a link between problems? Point it out
-- **Challenge assumptions** — Respectfully question whether a proposed approach would work on the ground
+Your vote directly shapes what gets built. Browse [open problems](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22%F0%9F%8C%B1+submitted%22) and:
+- **Thumbs up** (👍) problems you've seen or care about
+- **Comment** with additional context, data, or local perspective
+- **Share** problems with people who face them — their voice matters most
 
 ### 3. Propose a Solution
 
-Have an idea for solving a problem? Don't wait for permission.
+See a problem you know how to tackle? [Propose a solution](../../issues/new?template=solution-proposal.yml).
 
-**[Propose a Solution →](../../issues/new?template=solution-proposal.yml)**
+Your proposal doesn't need to be a complete technical design. A clear idea with a rough approach is enough to start the conversation.
 
-Your proposal doesn't need to be perfect. Include:
-- Which problem it addresses (link the issue)
-- How it would work at a high level
-- What AI/technology approach you'd suggest
-- What skills and resources are needed
-- Whether you can help build it
+### 4. Volunteer Your Skills
 
-### 4. Build Solutions
+[Tell us what you can do](../../issues/new?template=volunteer.yml). We match volunteers to projects based on skills, interests, and availability.
 
-When a problem reaches critical mass and a solution is designed, it's time to build.
+**Every skill matters:**
+- ML/AI engineers, data scientists, developers
+- UI/UX designers
+- Translators and localization specialists
+- Domain experts (agriculture, health, education, etc.)
+- Community organizers and outreach
+- Technical writers and documentarians
+- Project managers
+- Mentors and teachers
 
-- **Fork the solution repo** — Each committed solution gets its own repo under [ai4change-org](https://github.com/ai4change-org)
-- **Pick up issues** — Look for `good first issue` and `help wanted` labels
-- **Submit PRs** — Follow the repo's specific contributing guidelines
-- **Review code** — Constructive code review is a huge contribution
-- **Test** — Especially valuable: testing with real users in affected communities
+### 5. Build Solutions
 
-### 5. Non-Technical Contributions
+When a problem reaches critical mass and a solution is committed, development happens in dedicated repos under the [ai4change-org](https://github.com/ai4change-org) organization. Look for issues labeled [✅ committed](../../issues?q=is%3Aissue+label%3A%22%E2%9C%85+committed%22) or [🔨 building](../../issues?q=is%3Aissue+label%3A%22%F0%9F%94%A8+building%22).
 
-Some of the most critical work doesn't involve code:
+### 6. Join Discussions
 
-| Contribution | Why It Matters |
-|---|---|
-| **Translation & Localization** | Solutions must work in local languages to be useful |
-| **Domain Expertise** | A teacher knows what classrooms need better than any engineer |
-| **Community Testing** | Does this actually work for the people it's meant to help? |
-| **Data Collection** | AI needs data — help gather, label, and validate datasets |
-| **Documentation** | Write guides that help users and contributors |
-| **Outreach** | Spread the word in your community, school, or workplace |
-| **Mentoring** | Help newcomers learn and grow |
-
-### 6. Volunteer Your Skills
-
-Want to help but not sure where to start?
-
-**[Volunteer →](../../issues/new?template=volunteer.yml)**
-
-Tell us about your skills, availability, and interests. We'll connect you with problems that match.
-
----
-
-## First-Time Contributor Guide
-
-New to open source? New to AI4Change? Here's how to get started:
-
-1. **Browse the problem board** — Read through [open issues](../../issues) to understand what people are working on
-2. **Find something that resonates** — Look for problems in areas you know about or care about
-3. **Start small** — Leave a thoughtful comment, share context, or upvote
-4. **Introduce yourself** — [Submit a volunteer form](../../issues/new?template=volunteer.yml) so the community knows you're here
-5. **Join Discussions** — Visit [GitHub Discussions](../../discussions) to ask questions and connect with others
-6. **Read the [Code of Conduct](CODE_OF_CONDUCT.md)** — We take this seriously
-
-**Don't be afraid to contribute.** There are no stupid questions. The person closest to the problem often has the best insight, regardless of their technical background.
-
----
+The [discussion forums](../../discussions) are where the community connects:
+- **Ideas** — brainstorm new approaches
+- **Regional Hubs** — find people near you
+- **AI Tools & Techniques** — share technical knowledge
+- **Learning & Mentorship** — teach and learn
 
 ## How Problems Become Solutions
 
 ```
-Submit Problem → Community Votes & Discusses → Solution Proposed → Team Forms → Build → Ship → Impact
-     📝                    👍 💬                      💡                👥          🔨      📦       🌍
+Submit → Vote → Discuss → Commit → Build → Ship
+  🌱       👍      💬        ✅       🔨      📦
 ```
 
-1. **Submitted** — A problem is raised and labeled `🌱 submitted`
-2. **Trending** — Community upvotes push it to `🔥 trending`
-3. **Committed** — AI4Change commits to solving it → `✅ committed`
-4. **Building** — A team forms and starts building → `🔨 building`
-5. **Shipped** — Solution is deployed, open source → `📦 shipped`
+1. **🌱 Submitted** — A new problem is raised
+2. **🔥 Trending** — Community votes push it to visibility
+3. **✅ Committed** — AI4Change commits to building a solution
+4. **🔨 Building** — A team forms and development begins
+5. **📦 Shipped** — Solution is deployed and open source
 
----
+## Guidelines for Good Problem Submissions
 
-## Guidelines
+- **Be specific about location and population** — "farmers in Western Kenya" not "farmers in Africa"
+- **Quantify where possible** — "affects ~2M people" is more actionable than "affects many"
+- **Describe what's been tried** — this prevents reinventing the wheel
+- **Include data sources** — existing datasets, research, or local organizations make solutions more feasible
+- **Stay grounded** — AI is powerful but not magic. The best problems are ones where AI provides a clear advantage over existing approaches
 
-- **Respect everyone** — This is a global community. Read our [Code of Conduct](CODE_OF_CONDUCT.md)
-- **Be constructive** — Critique ideas, not people
-- **Stay focused** — Keep discussions relevant to the problem at hand
-- **Share credit** — Acknowledge contributions from others
-- **Think globally** — Solutions should be accessible, offline-capable when possible, and culturally sensitive
-- **Build in the open** — All solutions are open source (MIT or Apache 2.0)
+## Guidelines for Good Solution Proposals
 
----
+- **Start with the problem, not the technology** — explain how your solution addresses the specific need
+- **Be honest about limitations** — every approach has tradeoffs
+- **Consider local constraints** — internet availability, device types, languages, literacy levels
+- **Build on existing work** — reference prior art, open datasets, and open-source tools
+- **Think about sustainability** — who maintains this after it's built?
+
+## Code Contributions
+
+When a solution moves to development:
+
+1. **Fork** the solution repo
+2. **Create a branch** from `main`
+3. **Write clear commits** — one logical change per commit
+4. **Test your changes** — include tests where appropriate
+5. **Open a PR** — describe what you changed and why
+6. **Respond to review** — we review with care, not criticism
+
+### Code Standards
+
+- Write code for humans first, machines second
+- Comment the "why", not the "what"
+- Include README updates if you change how something works
+- Prefer simple solutions over clever ones
+- Consider offline-first, low-bandwidth, and low-resource environments
+
+## Communication
+
+- **Be kind.** The people behind these problems are real. The people contributing their time are generous.
+- **Be patient.** Contributors span every timezone and many are volunteering around jobs and families.
+- **Be specific.** "This doesn't work" helps less than "On Android 10, the camera preview crashes when..."
+- **Be inclusive.** Write for people who speak English as a second (or third) language.
+
+## Recognition
+
+Every contributor matters. We recognize contributions through:
+- Contributor listings in solution repos
+- Shoutouts in community announcements
+- The knowledge that your code is making someone's life better
 
 ## Questions?
 
-- Start a thread in [GitHub Discussions](../../discussions)
-- Browse existing [issues](../../issues) for inspiration
-- Read the [README](README.md) for an overview of how AI4Change works
+- Open a discussion in [💡 Ideas](../../discussions/categories/ideas)
+- Check existing issues and discussions first — your question may already be answered
+- No question is too basic. We all started somewhere.
 
-**Every contribution matters. Let's build something that changes the world.**
+---
+
+*AI4Change is built on the belief that the best technology comes from the people closest to the problem. Your perspective is your superpower.*

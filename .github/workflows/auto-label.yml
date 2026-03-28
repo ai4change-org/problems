@@ -2,7 +2,7 @@ name: Auto-Label Issues
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
 
 permissions:
   issues: write
@@ -11,81 +11,84 @@ jobs:
   auto-label:
     runs-on: ubuntu-latest
     steps:
-      - name: Add 'submitted' label to new problem issues
+      - name: Auto-label based on content
         uses: actions/github-script@v7
         with:
           script: |
             const issue = context.payload.issue;
-            const title = issue.title || '';
+            const text = `${issue.title} ${issue.body}`.toLowerCase();
+            const labels = [];
 
-            // Only label issues that use the problem template
-            if (title.startsWith('[Problem]:')) {
-              // Add the submitted label (should already be set by template, but ensure it)
+            const categories = {
+              '🌾 agriculture': [
+                'agriculture', 'farming', 'crop', 'livestock', 'irrigation',
+                'harvest', 'soil', 'fertilizer', 'pest', 'food security',
+                'smallholder', 'agronomist', 'seed', 'drought'
+              ],
+              '🎓 education': [
+                'education', 'school', 'student', 'teacher', 'literacy',
+                'learning', 'curriculum', 'classroom', 'university', 'training',
+                'textbook', 'tutor', 'mentor'
+              ],
+              '🏥 health': [
+                'health', 'medical', 'hospital', 'clinic', 'disease',
+                'diagnosis', 'patient', 'medicine', 'vaccine', 'maternal',
+                'malaria', 'hiv', 'tuberculosis', 'mental health', 'pharmacy',
+                'supply chain'
+              ],
+              '🏗️ infrastructure': [
+                'infrastructure', 'road', 'bridge', 'housing', 'transport',
+                'building', 'construction', 'urban', 'rural development',
+                'connectivity', 'internet access'
+              ],
+              '🌍 environment': [
+                'environment', 'climate', 'pollution', 'deforestation',
+                'biodiversity', 'conservation', 'carbon', 'emissions',
+                'renewable', 'waste', 'recycling', 'ecosystem'
+              ],
+              '💧 water': [
+                'water', 'sanitation', 'clean water', 'well', 'groundwater',
+                'waterborne', 'drinking water', 'water quality', 'purification',
+                'water access', 'hygiene'
+              ],
+              '⚡ energy': [
+                'energy', 'electricity', 'solar', 'power grid', 'microgrid',
+                'off-grid', 'battery', 'electrification', 'blackout',
+                'energy access'
+              ],
+              '🚨 disaster-response': [
+                'disaster', 'earthquake', 'flood', 'hurricane', 'tsunami',
+                'emergency', 'relief', 'evacuation', 'rescue', 'humanitarian',
+                'crisis', 'conflict', 'refugee'
+              ]
+            };
+
+            for (const [label, keywords] of Object.entries(categories)) {
+              if (keywords.some(kw => text.includes(kw))) {
+                labels.push(label);
+              }
+            }
+
+            const regions = {
+              '🌍 africa': ['africa', 'kenya', 'nigeria', 'ethiopia', 'tanzania', 'uganda', 'ghana', 'south africa', 'mozambique', 'senegal', 'mali', 'niger', 'congo', 'rwanda', 'malawi'],
+              '🌏 asia': ['asia', 'india', 'bangladesh', 'nepal', 'indonesia', 'philippines', 'vietnam', 'cambodia', 'myanmar', 'pakistan', 'sri lanka', 'thailand'],
+              '🌎 americas': ['brazil', 'mexico', 'colombia', 'peru', 'haiti', 'guatemala', 'honduras', 'bolivia', 'caribbean'],
+              '🌍 europe': ['europe', 'ukraine', 'romania', 'turkey'],
+              '🌏 oceania': ['oceania', 'pacific islands', 'fiji', 'papua new guinea', 'tonga', 'samoa']
+            };
+
+            for (const [label, keywords] of Object.entries(regions)) {
+              if (keywords.some(kw => text.includes(kw))) {
+                labels.push(label);
+              }
+            }
+
+            if (labels.length > 0) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                labels: ['🌱 submitted']
+                labels: labels
               });
-
-              // Try to detect category from issue body and add appropriate labels
-              const body = issue.body || '';
-
-              // Region detection
-              const regions = {
-                'Africa': '🌍 Africa',
-                'Asia': '🌏 Asia',
-                'Europe': '🌍 Europe',
-                'North America': '🌎 North America',
-                'Central America': '🌎 Central America & Caribbean',
-                'South America': '🌎 South America',
-                'Oceania': '🌏 Oceania',
-                'Middle East': '🌍 Middle East',
-                'Global': '🌐 Global'
-              };
-
-              const labelsToAdd = [];
-
-              for (const [key, label] of Object.entries(regions)) {
-                if (body.includes(key)) {
-                  labelsToAdd.push(label);
-                  break;
-                }
-              }
-
-              // Category detection
-              const categories = {
-                'Agriculture': '🌾 agriculture',
-                'Education': '🎓 education',
-                'Health': '🏥 health',
-                'Environment': '🌍 environment',
-                'Infrastructure': '🏗️ infrastructure',
-                'Economic': '💰 economic-development',
-                'Governance': '🏛️ governance',
-                'Disaster': '🚨 disaster-response',
-                'Water': '💧 water-sanitation',
-                'Energy': '⚡ energy',
-                'Digital': '📱 digital-inclusion'
-              };
-
-              for (const [key, label] of Object.entries(categories)) {
-                if (body.includes(key)) {
-                  labelsToAdd.push(label);
-                  break;
-                }
-              }
-
-              // Urgency detection
-              if (body.includes('Critical')) {
-                labelsToAdd.push('🔴 critical');
-              }
-
-              if (labelsToAdd.length > 0) {
-                await github.rest.issues.addLabels({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  labels: labelsToAdd
-                });
-              }
+              console.log(`Added labels: ${labels.join(', ')}`);
             }

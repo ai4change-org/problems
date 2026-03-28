@@ -1,8 +1,8 @@
-name: Label Trending Issues
+name: Trending Issues
 
 on:
   schedule:
-    - cron: '0 8 * * 0'  # Every Sunday at 8am UTC
+    - cron: '0 9 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -12,52 +12,64 @@ jobs:
   trending:
     runs-on: ubuntu-latest
     steps:
-      - name: Find and label trending issues
+      - name: Identify and label trending issues
         uses: actions/github-script@v7
         with:
           script: |
-            const { data: issues } = await github.rest.issues.listForRepo({
+            const TRENDING_LABEL = '🔥 trending';
+            const REACTION_THRESHOLD = 5;
+            const LOOKBACK_DAYS = 30;
+
+            const since = new Date();
+            since.setDate(since.getDate() - LOOKBACK_DAYS);
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              per_page: 100,
-              sort: 'created',
-              direction: 'desc'
+              since: since.toISOString(),
+              per_page: 100
             });
 
-            for (const issue of issues) {
-              // Get reactions for this issue
-              const { data: reactions } = await github.rest.reactions.listForIssue({
+            const problemIssues = issues.filter(i =>
+              !i.pull_request &&
+              i.labels.some(l => l.name === '🌱 submitted')
+            );
+
+            for (const issue of problemIssues) {
+              const reactions = await github.rest.reactions.listForIssue({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number
               });
 
-              // Count positive reactions (👍, ❤️, 🚀, 🎉)
-              const positiveReactions = reactions.filter(r =>
-                ['+1', 'heart', 'rocket', 'hooray'].includes(r.content)
-              ).length;
+              const thumbsUp = reactions.data.filter(r => r.content === '+1').length;
+              const hasTrending = issue.labels.some(l => l.name === TRENDING_LABEL);
 
-              const labels = issue.labels.map(l => l.name);
-              const hasTrending = labels.includes('🔥 trending');
-
-              if (positiveReactions >= 10 && !hasTrending) {
-                // Add trending label
+              if (thumbsUp >= REACTION_THRESHOLD && !hasTrending) {
                 await github.rest.issues.addLabels({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
-                  labels: ['🔥 trending']
+                  labels: [TRENDING_LABEL]
                 });
 
-                // Add a comment celebrating the milestone
                 await github.rest.issues.createComment({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   issue_number: issue.number,
-                  body: `## 🔥 This problem is trending!\n\nThis issue has reached **${positiveReactions} positive reactions** from the community. That means people care about this problem and want to see it solved.\n\n**What happens next:**\n- This problem is now prioritized for solution design\n- If you have ideas, [propose a solution](https://github.com/ai4change-org/problems/issues/new?template=solution-proposal.yml)\n- If you want to help build it, comment below with your skills\n\nThe community has spoken. Let's make this happen! 🌍`
+                  body: `## 🔥 This problem is trending!\n\nThis issue has received significant community support (${thumbsUp} votes). The AI4Change community is paying attention.\n\n**What happens next:**\n- This problem will be highlighted in our weekly digest\n- Solution proposals are especially welcome — [propose one here](../../issues/new?template=solution-proposal.yml)\n- If you have relevant expertise, consider [volunteering](../../issues/new?template=volunteer.yml)\n\nThank you to everyone who voted and contributed to the discussion! 🌍`
                 });
 
-                console.log(`Labeled issue #${issue.number} as trending (${positiveReactions} reactions)`);
+                console.log(`Marked issue #${issue.number} as trending (${thumbsUp} votes)`);
+              } else if (thumbsUp < REACTION_THRESHOLD && hasTrending) {
+                await github.rest.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  name: TRENDING_LABEL
+                }).catch(() => {});
               }
             }
+
+            console.log(`Processed ${problemIssues.length} issues for trending status`);

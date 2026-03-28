@@ -1,8 +1,8 @@
-name: Manage Stale Issues
+name: Stale Issue Management
 
 on:
   schedule:
-    - cron: '0 6 * * 1'  # Every Monday at 6am UTC
+    - cron: '0 6 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -15,26 +15,24 @@ jobs:
       - uses: actions/stale@v9
         with:
           stale-issue-message: |
-            This problem hasn't had any activity in 90 days. We're marking it as stale — but that doesn't mean it's not important.
+            👋 This problem hasn't seen activity in 90 days.
 
-            **To keep this open:**
-            - Add a comment with new context or updates
-            - React with 👍 to show continued community interest
-            - Propose a solution if you have ideas
+            **This doesn't mean it's not important!** Sometimes great problems just need the right person to see them.
 
-            If no activity occurs in the next 30 days, this issue will be automatically closed. It can always be reopened.
+            **To keep this issue active**, you can:
+            - 💬 Add new context or updates
+            - 👍 React to show continued interest
+            - 💡 [Propose a solution](../../issues/new?template=solution-proposal.yml)
 
-            *Every problem matters. If this is still relevant, let us know!*
+            If no activity occurs in the next 30 days, this issue will be closed. It can always be reopened — no problem is forgotten.
           close-issue-message: |
-            This issue has been automatically closed after 120 days of inactivity.
+            This issue has been closed due to inactivity. **The problem hasn't gone away** — we just want to keep the board focused on issues the community is actively engaged with.
 
-            **This doesn't mean the problem is solved.** If this is still relevant:
-            - Reopen this issue with updated context
-            - Submit a new problem issue with fresh information
-
-            Thank you for raising this. The community is stronger because of contributors like you. 🌍
-          stale-issue-label: '⏳ stale'
+            **Want to revive this?** Simply reopen the issue and add a comment with any updates. Problems worth solving don't expire. 🌍
+          stale-issue-label: '😴 stale'
           days-before-stale: 90
           days-before-close: 30
           exempt-issue-labels: '🔥 trending,✅ committed,🔨 building,📦 shipped'
-          operations-per-run: 50
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          operations-per-run: 30
