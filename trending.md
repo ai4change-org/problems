@@ -1,6 +1,6 @@
 # 🔥 Trending Problems
 
-> Auto-updated by the [Trending Issues workflow](.github/workflows/trending.yml) — last run: **not yet**
+> Auto-updated by the [Trending Issues workflow](.github/workflows/trending.yml) — last run: **2026-03-30**
 
 These are the problems the AI4Change community cares most about right now, ranked by engagement (reactions + comments).
 
